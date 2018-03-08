@@ -36,8 +36,9 @@ namespace TestApp.Proxy
         public async Task<string> GetValuesAsync()
         {
             var client = new HttpClient { BaseAddress = new Uri(serviceOptions.BaseUrl, UriKind.Absolute) };
+            var parameter = await GetAccessTokenAsync();
             client.DefaultRequestHeaders.Authorization = 
-                new AuthenticationHeaderValue("Bearer", await GetAccessTokenAsync());
+                new AuthenticationHeaderValue("Bearer", parameter);
 
             return await client.GetStringAsync("api/values");
         }
