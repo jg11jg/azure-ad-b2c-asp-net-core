@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore;
+using Microsoft.Extensions.Configuration;
 
 namespace TestService
 {
@@ -8,7 +9,10 @@ namespace TestService
     {
         public static void Main(string[] args)
         {
+            var configuration = new ConfigurationBuilder().AddCommandLine(args).Build();
+
             var host = WebHost.CreateDefaultBuilder(args)
+                .UseConfiguration(configuration)
                 .UseStartup<Startup>()
                 .Build();
 
