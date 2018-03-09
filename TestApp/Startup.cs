@@ -71,6 +71,7 @@ namespace TestApp
                                                new[] { b2cPolicies.Value.SignInOrSignUpPolicy, b2cPolicies.Value.EditProfilePolicy, b2cPolicies.Value.ResetPasswordPolicy });
 
                 options.Events = CreateOpenIdConnectEventHandlers(authOptions.Value, b2cPolicies.Value, distributedCache);
+                options.GetClaimsFromUserInfoEndpoint = true;
 
                 options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                 options.TokenValidationParameters = new TokenValidationParameters

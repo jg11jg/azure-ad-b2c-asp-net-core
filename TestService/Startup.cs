@@ -15,10 +15,14 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using TestApp;
 using TestApp.Infrastructure;
+using AuthenticationFailedContext = Microsoft.AspNetCore.Authentication.JwtBearer.AuthenticationFailedContext;
+using MessageReceivedContext = Microsoft.AspNetCore.Authentication.JwtBearer.MessageReceivedContext;
+using TokenValidatedContext = Microsoft.AspNetCore.Authentication.JwtBearer.TokenValidatedContext;
 
 namespace TestService
 {
@@ -46,11 +50,38 @@ namespace TestService
 
             ConfigureAuthentication(services);
 
-            services.AddAuthorization(options =>
-                  options.AddPolicy("ReadValuesPolicy", WhatsGoingOnHere));
-                //options.AddPolicy("ReadValuesPolicy", config => config.RequireClaim("http://schemas.microsoft.com/identity/claims/scope", new[] { "read_values" })));
-            
+            var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+//                .RequireAssertion((Func<AuthorizationHandlerContext, bool>) Handler1)
+                //.RequireClaim("postalCode", "e143")
+//                .RequireClaim("scp", "read_values")
+                .RequireClaim("http://schemas.microsoft.com/identity/claims/scope",  "read_values" )
+                //    .RequireAssertion((Func<AuthorizationHandlerContext, bool>)Handler2)
+               .Build()
+                ;
 
+            services.AddAuthorization(options =>
+                {
+                    options.AddPolicy("ReadValuesPolicy", policy); 
+                }
+
+
+            );
+
+            //options.AddPolicy("ReadValuesPolicy", config => config.RequireClaim("http://schemas.microsoft.com/identity/claims/scope", new[] { "read_values" })));
+
+
+        }
+
+        private bool Handler1(AuthorizationHandlerContext authorizationHandlerContext)
+        {
+            Console.WriteLine(authorizationHandlerContext);
+            return true;
+        }
+
+        private bool Handler2(AuthorizationHandlerContext authorizationHandlerContext)
+        { 
+            Console.WriteLine(authorizationHandlerContext);
+            return true;
         }
 
         private void WhatsGoingOnHere(AuthorizationPolicyBuilder config)
@@ -72,42 +103,88 @@ namespace TestService
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAuthentication(options =>
-            {
-                //options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                  options.DefaultScheme = Constants.OpenIdConnectAuthenticationScheme;
-                //  options.DefaultChallengeScheme = Constants.OpenIdConnectAuthenticationScheme;
-            })
-            .AddCookie()
-            .AddOpenIdConnect(Constants.OpenIdConnectAuthenticationScheme, options =>
-            {
-                options.Authority = authOptions.Value.Authority;
-                options.ClientId = authOptions.Value.ClientId;
-                options.ClientSecret = authOptions.Value.ClientSecret;
-                options.SignedOutRedirectUri = authOptions.Value.PostLogoutRedirectUri;
-
-                options.ConfigurationManager = new PolicyConfigurationManager(authOptions.Value.Authority,
-                                               new[] { b2cPolicies.Value.SignInOrSignUpPolicy, b2cPolicies.Value.EditProfilePolicy, b2cPolicies.Value.ResetPasswordPolicy });
-
-                options.Events = CreateOpenIdConnectEventHandlers(authOptions.Value, b2cPolicies.Value, distributedCache);
-
-                options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
-                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    NameClaimType = "name"
-                };
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    //options.DefaultScheme = Constants.OpenIdConnectAuthenticationScheme;
+                    options.DefaultChallengeScheme = Constants.OpenIdConnectAuthenticationScheme;
+                   // options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 
-                // it will fall back on using DefaultSignInScheme if not set
-                options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie()
+                .AddOpenIdConnect(Constants.OpenIdConnectAuthenticationScheme, options =>
+                {
+                    options.Authority = authOptions.Value.Authority;
+                    options.ClientId = authOptions.Value.ClientId;
+                    options.ClientSecret = authOptions.Value.ClientSecret;
+                    options.SignedOutRedirectUri = authOptions.Value.PostLogoutRedirectUri;
+                    options.GetClaimsFromUserInfoEndpoint = true;
 
-                // we have to set these scope that will be used in /authorize request
-                // (otherwise the /token request will not return access and refresh tokens)
-                options.Scope.Add("offline_access");
-                options.Scope.Add($"{authOptions.Value.ApiIdentifier}/read_values");
+                    options.ConfigurationManager = new PolicyConfigurationManager(authOptions.Value.Authority,
+                        new[]
+                        {
+                            b2cPolicies.Value.SignInOrSignUpPolicy, b2cPolicies.Value.EditProfilePolicy,
+                            b2cPolicies.Value.ResetPasswordPolicy
+                        });
 
-                // this can be used if the middleware redeems the authorization code
-                //options.SaveTokens = true;
+                    options.Events =
+                        CreateOpenIdConnectEventHandlers(authOptions.Value, b2cPolicies.Value, distributedCache);
 
-            });
+                    options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = "name"
+                    };
+
+                    // it will fall back on using DefaultSignInScheme if not set
+                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+                    // we have to set these scope that will be used in /authorize request
+                    // (otherwise the /token request will not return access and refresh tokens)
+                    options.Scope.Add("offline_access");
+                    options.Scope.Add($"{authOptions.Value.ApiIdentifier}/read_values");
+
+                    // this can be used if the middleware redeems the authorization code
+                    //options.SaveTokens = true;
+
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.MetadataAddress =
+                        $"{authOptions.Value.Authority}/.well-known/openid-configuration?p={"B2C_1_SiUpIn"}";
+                    options.Audience = authOptions.Value.ClientId;
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = OnAuthenticationFailed,
+                        OnChallenge = OnChallenge,
+                        OnMessageReceived = OnMessageReceived,
+                        OnTokenValidated = OnTokenValidated
+                    };
+                });
+
+        }
+
+        private static Task OnTokenValidated(TokenValidatedContext arg)
+        {
+            Console.WriteLine(arg);
+            return Task.FromResult(0);
+        }
+
+        private static Task OnMessageReceived(MessageReceivedContext arg)
+        {
+            Console.WriteLine(arg);
+            return Task.FromResult(0);
+        }
+
+        private static Task OnChallenge(JwtBearerChallengeContext arg)
+        {
+            Console.WriteLine(arg);
+            return Task.FromResult(0);
+        }
+
+        private static Task OnAuthenticationFailed(AuthenticationFailedContext arg)
+        {
+            Console.WriteLine(arg);
+            return Task.FromResult(0);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -140,7 +217,9 @@ namespace TestService
             {
                 OnRedirectToIdentityProvider = context => SetIssuerAddressAsync(context, policies.SignInOrSignUpPolicy),
                 OnRedirectToIdentityProviderForSignOut = context => SetIssuerAddressForSignOutAsync(context, policies.SignInOrSignUpPolicy),
-                OnAuthorizationCodeReceived = async context =>
+                OnTokenValidated = OnTokenValidated,
+                OnUserInformationReceived = OnUserInformationReceived,
+            OnAuthorizationCodeReceived = async context =>
                 {
                     try
                     {
@@ -192,6 +271,19 @@ namespace TestService
                     return Task.FromResult(0);
                 }
             };
+        }
+
+        private static Task OnUserInformationReceived(UserInformationReceivedContext arg)
+        {
+            Console.WriteLine(arg);
+            return Task.FromResult(0);
+        }
+
+        private static Task OnTokenValidated(Microsoft.AspNetCore.Authentication.OpenIdConnect.TokenValidatedContext arg)
+        {
+            Console.WriteLine(arg);
+            Console.WriteLine("ok so we have authenticated user - now ensure they have profile in database.");
+            return Task.FromResult(0);
         }
 
         private static async Task SetIssuerAddressAsync(RedirectContext context, string defaultPolicy)

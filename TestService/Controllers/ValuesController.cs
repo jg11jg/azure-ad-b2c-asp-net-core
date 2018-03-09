@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +13,8 @@ namespace TestService.Controllers
     {
         // GET api/values
         [HttpGet]
-        [Authorize("ReadValuesPolicy")]
+        //[Authorize("ReadValuesPolicy")]
+        [Authorize("ReadValuesPolicy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
