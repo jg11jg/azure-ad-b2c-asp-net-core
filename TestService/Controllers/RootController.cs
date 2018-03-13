@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using B2CGraphShell;
 using Microsoft.Extensions.Options;
@@ -32,7 +33,9 @@ namespace TestService.Controllers
 
         public IActionResult Me()
         {
-            return new OkObjectResult("Me");
+            var email = HttpContext.User.FindFirst("emails").Value;
+
+            return new RedirectResult("/Users/" + email);
         }
 
         [Route("/")]
@@ -65,14 +68,11 @@ namespace TestService.Controllers
 
         public async Task<IActionResult> Delete()
         {
-            var objectId = "";
+            var userObjectIdentifier = HttpContext.User.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier");
 
             var client = new B2CGraphClient(_tenantAdminOptions.ClientId, _tenantAdminOptions.ClientSecret, _tenantAdminOptions.Tenant);
-
-            if (HttpContext.User.HasClaim(x => x.Type == ""))
-            {
-                await client.DeleteUser(objectId);
-            }
+            
+            await client.DeleteUser(userObjectIdentifier.Value);
 
             return await SignOut();
         }
