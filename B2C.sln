@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{9BD9D26D-9557-4341-9F31-D97DD9BB3DDA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestService", "TestService\TestService.csproj", "{9F7F028F-7BAA-4886-A4AE-70D9294D8EB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "B2CGraphClient", "B2CGraphClient\B2CGraphClient.csproj", "{6F5B6039-0952-4ECE-9584-ED1F1A253E24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,15 @@ Global
 		{9F7F028F-7BAA-4886-A4AE-70D9294D8EB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F7F028F-7BAA-4886-A4AE-70D9294D8EB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F7F028F-7BAA-4886-A4AE-70D9294D8EB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F5B6039-0952-4ECE-9584-ED1F1A253E24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5B6039-0952-4ECE-9584-ED1F1A253E24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5B6039-0952-4ECE-9584-ED1F1A253E24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5B6039-0952-4ECE-9584-ED1F1A253E24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DD810F4C-5D4B-4ABE-A6D5-3589F72F4CB1}
 	EndGlobalSection
 EndGlobal

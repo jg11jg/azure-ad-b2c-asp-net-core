@@ -11,13 +11,10 @@ using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using TestApp;
 using TestApp.Infrastructure;
 using AuthenticationFailedContext = Microsoft.AspNetCore.Authentication.JwtBearer.AuthenticationFailedContext;
@@ -39,6 +36,7 @@ namespace TestService
         {
             services.Configure<B2CAuthenticationOptions>(configuration.GetSection("Authentication:AzureAd"));
             services.Configure<B2CPolicies>(configuration.GetSection("Authentication:AzureAd:B2C"));
+            services.Configure<TenantAdminOptions>(configuration.GetSection("TenantAdminService:b2c"));
 
             //services.Configure<TestServiceOptions>(configuration.GetSection("TestServiceOptions"));
             //services.AddTransient<TestServiceProxy>();
