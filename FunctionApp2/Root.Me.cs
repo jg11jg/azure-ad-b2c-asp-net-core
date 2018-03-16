@@ -18,7 +18,7 @@ namespace FunctionApp2
         {
             log.Info("C# HTTP trigger function processed a request.");
 
-            return new RootController(req).Me();
+            return new RootController(req, log).Me();
         }
     }
 }
