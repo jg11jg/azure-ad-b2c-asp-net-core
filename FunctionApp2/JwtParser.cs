@@ -1,4 +1,4 @@
-﻿//using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -16,8 +16,7 @@ namespace CalCrunch.Utils
 
         public bool TryParse(out string jwtOutput)
         {
-            var jwtHeader = "{";
-            /*  if (!TryGetToken(out var token))
+              if (!TryGetToken(out var token))
               {
                   jwtOutput = "The token doesn't seem to be in a proper JWT format.";
                   return false;
@@ -29,24 +28,24 @@ namespace CalCrunch.Utils
               foreach (var h in headers)
               {
                   jwtHeader += '"' + h.Key + "\":\"" + h.Value + "\",";
-              }*/
+              }
 
             jwtHeader += "}";
             jwtOutput = "Header:\r\n" + JToken.Parse(jwtHeader).ToString(Formatting.Indented);
 
             //Extract the payload of the JWT
-            //var claims = token.Claims;
-            //var jwtPayload = claims.Aggregate("{",
-              //  (current, c) => current + ('"' + c.Type + "\":\"" + c.Value + "\","));
+            var claims = token.Claims;
+            var jwtPayload = claims.Aggregate("{",
+                (current, c) => current + ('"' + c.Type + "\":\"" + c.Value + "\","));
 
-            //jwtPayload += "}";
+            jwtPayload += "}";
 
-            //jwtOutput += "\r\nPayload:\r\n" + JToken.Parse(jwtPayload).ToString(Formatting.Indented);
+            jwtOutput += "\r\nPayload:\r\n" + JToken.Parse(jwtPayload).ToString(Formatting.Indented);
 
             return true;
         }
 
- /*       public bool TryGetToken(out JwtSecurityToken token)
+        public bool TryGetToken(out JwtSecurityToken token)
         {
             var jwtHandler = new JwtSecurityTokenHandler();
 
@@ -59,6 +58,6 @@ namespace CalCrunch.Utils
             token = jwtHandler.ReadJwtToken(_jwtInput);
 
             return true;
-        }*/
+        }
     }
 }

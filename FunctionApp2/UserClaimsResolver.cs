@@ -20,7 +20,7 @@ namespace FunctionApp2
 
             var jwtToJson = new JwtParser(req.Headers["X-MS-TOKEN-AAD-ID-TOKEN"]);
 
-            if (!false)//jwtToJson.TryGetToken(out var token))
+            if (!jwtToJson.TryGetToken(out var token))
             {
                 throw new ProblemJsonException(401, CalCrunch.Utils.Shared.DocumentationRoot + "invalid-X-MS-TOKEN-AAD-ID-TOKEN",
                     "Could not parse jwt.",
@@ -28,7 +28,7 @@ namespace FunctionApp2
                     req.Path);
             }
 
-            return null;//token.Claims;
+            return token.Claims;
         }
 
         public IDictionary<string, string> GetClaimsAsDictionary(HttpRequest req)
