@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "FunctionApp2": {
+    "FunctionApp_Azure_Functions_Cli_dll": {
       "commandName": "Project",
       "commandLineArgs": "%APPDATA%\\npm\\node_modules\\azure-functions-core-tools\\bin\\func.dll host start --port 8888 --pause-on-error"
     }
