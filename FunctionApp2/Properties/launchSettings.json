@@ -2,7 +2,7 @@
   "profiles": {
     "FunctionApp2": {
       "commandName": "Project",
-      "commandLineArgs": "c:\\users\\x598144\\AppData\\Local\\Azure.Functions.V2.Cli\\2.0.1-beta.22\\Azure.Functions.Cli.dll host start --port 8888 --pause-on-error"
+      "commandLineArgs": "C:\\Users\\johng\\AppData\\Local\\Azure.Functions.V2.Cli\\2.0.1-beta\\Azure.Functions.Cli.dll host start --port 8888 --pause-on-error"
     }
   }
 }
