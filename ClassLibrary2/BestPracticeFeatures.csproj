@@ -75,7 +75,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpecFlowFeature1.feature.cs">
       <AutoGen>True</AutoGen>
@@ -93,9 +92,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FunctionApp2\FunctionApp2.csproj">
-      <Project>{a82fdbba-7c3a-480c-a9ac-aeb2ab381a0e}</Project>
-      <Name>FunctionApp2</Name>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BestPracticesFunctionsApp\BestPracticeFunctionApp.csproj">
+      <Project>{90a29d81-3fa0-4e77-9f29-1b36ce73ad00}</Project>
+      <Name>BestPracticeFunctionApp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using FunctionApp2;
+using BestPracticeFunctionApp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Moq;
@@ -23,7 +23,7 @@ namespace ClassLibrary2
 
             var req = new Mock<HttpRequest>();
 
-            var rv = Function1.Run(req.Object, log.Object);
+            var rv = RootMe.Run(req.Object, log.Object);
             //ScenarioContext.Current.Pending();
         }
         
