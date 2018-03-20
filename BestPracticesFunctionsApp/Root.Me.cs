@@ -18,7 +18,12 @@ namespace BestPracticeFunctionApp
         public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]HttpRequest req, TraceWriter log)
         {
 
-            var serviceProvider = ServiceCollectionFactory.GetServiceCollection().BuildServiceProvider();
+            var serviceCollection = ServiceCollectionFactory.GetServiceCollection();
+
+            serviceCollection.AddSingleton(req);
+            serviceCollection.AddSingleton(log);
+
+            var serviceProvider = serviceCollection.BuildServiceProvider();
 
             var rootController = serviceProvider.GetService<IRootController>();
 
