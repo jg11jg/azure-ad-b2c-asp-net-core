@@ -1,4 +1,3 @@
-using System.IO;
 using BestPracticeDependencyInjection;
 using BestPracticeInterfaces;
 using Microsoft.AspNetCore.Http;
@@ -7,8 +6,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Newtonsoft.Json;
 
 namespace BestPracticeFunctionApp
 {

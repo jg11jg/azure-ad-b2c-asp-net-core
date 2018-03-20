@@ -10,6 +10,25 @@ namespace ClassLibrary2
     [Binding]
     public class SpecFlowFeature1Steps
     {
+
+        [Given(@"an empty user repository")]
+        public void GivenAnEmptyUserRepository()
+        {
+            ScenarioContext.Current.Pending();
+        }
+
+        [When(@"I add a user with email '(.*)' and password '(.*)'")]
+        public void WhenIAddAUserWithEmailAndPassword(string p0, string p1)
+        {
+            ScenarioContext.Current.Pending();
+        }
+
+        [Then(@"user repository contains (.*) user")]
+        public void ThenUserRepositoryContainsUser(int p0)
+        {
+            ScenarioContext.Current.Pending();
+        }
+
         [Given(@"I have entered (.*) into the calculator")]
         public void GivenIHaveEnteredIntoTheCalculator(int p0)
         {

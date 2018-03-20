@@ -12,7 +12,7 @@ namespace BestPracticeFunctionApp
     public static class RootEcho
     {
         [FunctionName("Echo")]
-        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]
+        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]
             HttpRequest req, TraceWriter log)
         {
             return new OkObjectResult(DateTime.UtcNow.ToString("O"));

@@ -12,7 +12,7 @@ namespace BestPracticeFunctionApp
     public static class Version
     {
         [FunctionName("Version")]
-        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]
+        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]
             HttpRequest req, TraceWriter log)
         {
             var dic = new Dictionary<string, string>();

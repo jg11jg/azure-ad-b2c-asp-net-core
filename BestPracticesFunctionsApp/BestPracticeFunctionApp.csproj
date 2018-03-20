@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.9" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BestPracticeInterfaces\BestPracticeInterfaces.csproj" />
     <ProjectReference Include="..\BestPracticesDependencyInjection\BestPracticeDependencyInjection.csproj" />
   </ItemGroup>
   <ItemGroup>

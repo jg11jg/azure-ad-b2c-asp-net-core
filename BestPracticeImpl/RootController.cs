@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Host;
-using Newtonsoft.Json.Serialization;
 
 namespace BestPracticeImplementations
 {
