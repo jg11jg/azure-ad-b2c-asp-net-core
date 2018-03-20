@@ -12,6 +12,15 @@
     <ProjectReference Include="..\BestPracticesDependencyInjection\BestPracticeDependencyInjection.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="BuildFacts\BuildDate.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BuildFacts\CommitHash.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BuildFacts\VstsBuildNumber.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="host.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -20,4 +29,7 @@
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
   </ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="ECHO prebuild start&#xD;&#xA;mkdir $(ProjectDir)BuildFacts&#xD;&#xA;powershell -Command &quot;((Get-Date).ToUniversalTime()).ToString(\&quot;s\&quot;) | Out-File '$(ProjectDir)BuildFacts\BuildDate.txt'&quot;&#xD;&#xA;&#xD;&#xA;cd  $(SolutionDir)&#xD;&#xA;git rev-parse HEAD &gt; $(ProjectDir)BuildFacts\CommitHash.txt&#xD;&#xA;&#xD;&#xA;IF DEFINED BUILD_BUILDNUMBER ECHO %BUILD_BUILDNUMBER% &gt; $(ProjectDir)BuildFacts\VstsBuildNumber.txt&#xD;&#xA;ECHO prebuild end" />
+  </Target>
 </Project>

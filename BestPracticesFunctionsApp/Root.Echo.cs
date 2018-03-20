@@ -9,16 +9,13 @@ using Newtonsoft.Json;
 
 namespace BestPracticeFunctionApp
 {
-    namespace Root
+    public static class RootEcho
     {
-        public static class Echo
+        [FunctionName("Echo")]
+        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]
+            HttpRequest req, TraceWriter log)
         {
-            [FunctionName("Echo")]
-            public static IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]
-                HttpRequest req, TraceWriter log)
-            {
-                return new OkObjectResult(DateTime.UtcNow.ToString("O"));
-            }
+            return new OkObjectResult(DateTime.UtcNow.ToString("O"));
         }
     }
 }
